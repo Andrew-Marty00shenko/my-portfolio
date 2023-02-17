@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 
-module.exports = (id, email) => {
+module.exports = (id, email, name) => {
     return jwt.sign(
         {
             id,
-            email
+            email,
+            name
         },
         process.env.JWT_SECRET,
         {

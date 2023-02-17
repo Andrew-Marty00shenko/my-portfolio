@@ -7,9 +7,9 @@ const generateJWTToken = require('../utils/generateJWTToken');
 
 class UserController {
     async registration(req, res, next) {
-        const { email, password } = req.body;
+        const { email, password, name } = req.body;
 
-        if (!email || !password) {
+        if (!email || !password || !name) {
             return next(ApiError.badRequest('All fields is required'));
         };
 
@@ -24,8 +24,8 @@ class UserController {
         };
 
         const hashPassword = await bcrypt.hash(password, 5);
-        const user = await User.create({ email, password: hashPassword });
-        const token = generateJWTToken(user.id, email);
+        const user = await User.create({ email, password: hashPassword, name });
+        const token = generateJWTToken(user.id, email, name);
 
         return res.json({ token });
     }
@@ -54,7 +54,7 @@ class UserController {
 
 
     async auth(req, res, next) {
-        const token = generateJWTToken(req.user.id, req.user.email);
+        const token = generateJWTToken(req.user.id, req.user.email, req.user.name);
 
         return res.json({ token });
     }
