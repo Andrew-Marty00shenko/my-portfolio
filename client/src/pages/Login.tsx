@@ -27,11 +27,13 @@ const Login: FC = () => {
                 const { token } = res.data;
 
                 if (token !== null) {
-                    toast.success('User has been successfully registered!');
+                    localStorage.setItem("token", token ?? '');
+                    toast.success('Welcome!');
                 };
             },
             onError: (err: any) => {
                 toast.error(err.response.data.message);
+                localStorage.removeItem("token");
             },
         }
     );
