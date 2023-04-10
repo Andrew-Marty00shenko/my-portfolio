@@ -1,49 +1,55 @@
-const { Project } = require('../models/models');
-const ApiError = require('../error/ApiError');
-const uuid = require('uuid');
-const path = require('path');
+const uuid = require("uuid");
+const path = require("path");
+
+const { Project } = require("../models/models");
+const ApiError = require("../error/ApiError");
 
 class ProjectController {
-    async createProject(req, res, next) {
-        try {
-            const { name, description, links } = req.body;
-            const { image } = req.files;
+  async createProject(req, res, next) {
+    try {
+      const { name, description, links } = req.body;
+      const { image } = req.files;
 
-            let fileName = uuid.v4() + '.png';
-            image.mv(path.resolve(__dirname, '..', 'static', fileName));
+      let fileName = uuid.v4() + ".png";
+      image.mv(path.resolve(__dirname, "..", "static", fileName));
 
-            const project = await Project.create({ name, description, links, image: fileName });
+      const project = await Project.create({
+        name,
+        description,
+        links,
+        image: fileName,
+      });
 
-            return res.json(project);
-        } catch (err) {
-            next(ApiError.badRequest(err.message));
-        }
+      return res.json(project);
+    } catch (err) {
+      next(ApiError.badRequest(err.message));
     }
+  }
 
-    async getProjects(req, res) {
-        let { skip, limit } = req.query;
+  async getProjects(req, res) {
+    let { skip, limit } = req.query;
 
-        skip = skip || 0;
-        limit = limit || 10;
-        let offset = (skip * limit - limit) >= 0 ? (skip * limit - limit) : 0;
+    skip = skip || 0;
+    limit = limit || 10;
+    let offset = skip * limit - limit >= 0 ? skip * limit - limit : 0;
 
-        console.log(offset)
+    console.log(offset);
 
-        const projects = await Project.findAndCountAll({ limit, offset });
+    const projects = await Project.findAndCountAll({ limit, offset });
 
-        return res.json(projects);
-    }
+    return res.json(projects);
+  }
 
-    async removeProject(req, res) {
-        const { id } = req.body;
-        await Project.destroy(({
-            where: {
-                id: id
-            }
-        }));
+  async removeProject(req, res) {
+    const { id } = req.body;
+    await Project.destroy({
+      where: {
+        id: id,
+      },
+    });
 
-        return res.json({ message: 'successfully removed' });
-    }
-};
+    return res.json({ message: "successfully removed" });
+  }
+}
 
 module.exports = new ProjectController();

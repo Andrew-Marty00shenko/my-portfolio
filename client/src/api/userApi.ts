@@ -1,17 +1,20 @@
-import axios from "./axios";
+import axios from './axios';
 
-import type { IUserRegisterForm } from "pages/Register";
-import type { IUserLoginForm } from "pages/Login";
+import type { ILoginForm, IRegisterForm, IToken } from 'types/user.type';
 
 export default {
-    register: async ({ name, email, password }: IUserRegisterForm) => {
-        const response = await axios.post<IUserRegisterForm>('/user/registration', { name, email, password });
+  register: async ({ name, email, password }: IRegisterForm) => {
+    const response = await axios.post<IToken>('/user/registration', {
+      name,
+      email,
+      password,
+    });
 
-        return response;
-    },
-    login: async ({ email, password }: IUserLoginForm) => {
-        const response = await axios.post<IUserLoginForm>('/user/login', { email, password });
+    return response;
+  },
+  login: async ({ email, password }: ILoginForm) => {
+    const response = await axios.post<IToken>('/user/login', { email, password });
 
-        return response;
-    }
-}
+    return response;
+  },
+};
