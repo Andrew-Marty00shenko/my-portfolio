@@ -1,13 +1,17 @@
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
 
+import { AuthContext } from 'context/auth.context';
 import userApi from 'api/userApi';
 
+import type { AxiosError } from 'axios';
 import type { ILoginForm, IRegisterForm } from 'types/user.type';
 import type { IError } from 'types/error.type';
-import type { AxiosError } from 'axios';
 
 const useAuth = () => {
+  const { setIsAuth } = useContext(AuthContext);
+
   const login = useMutation(
     async ({ email, password }: ILoginForm) => {
       return await userApi.login({ email, password });
@@ -19,6 +23,7 @@ const useAuth = () => {
         if (token !== null) {
           localStorage.setItem('token', token);
           toast.success('Welcome');
+          setIsAuth(true);
         }
       },
       onError(err: AxiosError) {
@@ -40,6 +45,7 @@ const useAuth = () => {
         if (token !== null) {
           localStorage.setItem('token', token);
           toast.success('User has been successfully registered!');
+          setIsAuth(true);
         }
       },
       onError(err: AxiosError) {

@@ -1,16 +1,25 @@
 import type { FC } from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { useContext, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import Login from 'pages/Login';
-import Register from 'pages/Register';
+import { AuthContext } from 'context/auth.context';
+
+import PrivateRoutes from './PrivateRoutes';
+import PublicRoutes from './PublicRoutes';
 
 const Router: FC = () => {
-  return (
-    <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
-    </Routes>
-  );
+  const navigate = useNavigate();
+  const { isAuth } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!isAuth) {
+      navigate('/login');
+    } else {
+      navigate('/');
+    }
+  }, [isAuth]);
+
+  return isAuth ? <PrivateRoutes /> : <PublicRoutes />;
 };
 
 export default Router;
