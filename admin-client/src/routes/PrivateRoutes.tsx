@@ -1,12 +1,17 @@
 import type { FC } from 'react';
-import { Routes } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
+
+import Dashboard from 'pages/Dashboard';
+import Header from 'components/Header';
 
 const PrivateRoutes: FC = () => {
   return (
-    <Routes>
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} /> */}
-    </Routes>
+    <>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+      </Routes>
+    </>
   );
 };
 

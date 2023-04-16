@@ -56,7 +56,12 @@ const useAuth = () => {
     }
   );
 
-  return { login, registration };
+  const logout = () => {
+    localStorage.removeItem('token');
+    setIsAuth(false);
+  };
+
+  return { login, registration, logout };
 };
 
 export default useAuth;
